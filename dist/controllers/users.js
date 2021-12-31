@@ -15,15 +15,19 @@ const getUser = (req, res) => {
 };
 exports.getUser = getUser;
 const createUser = (req, res) => {
+    const body = req.body;
     res.json({
         msg: "Create user",
+        body,
     });
 };
 exports.createUser = createUser;
 const updateUser = (req, res) => {
     const id = req.params.id;
+    const body = req.body;
     res.json({
         msg: `Update user ${id}`,
+        body,
     });
 };
 exports.updateUser = updateUser;
