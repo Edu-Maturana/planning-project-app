@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon dist/app.js"
+    "start": "nodemon dist/main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/uuid": "^8.3.3",
+    "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -18,6 +20,7 @@
     "express-fileupload": "^1.2.1",
     "express-validator": "^6.9.2",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
     "mysql2": "^2.3.3",
     "sequelize": "^7.0.0-alpha.3",
     "uuid": "^8.3.2"
