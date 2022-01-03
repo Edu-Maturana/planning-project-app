@@ -1,11 +1,10 @@
 import { DataTypes, Model } from "sequelize";
-import moment from "moment";
 
 import connection from "../db/connection";
 
 // Create workspace model
 class Workspace extends Model {
-    public id!: number;
+    public id!: string;
     public name!: string;
     public description!: string;
     public members!: String[];
@@ -35,7 +34,6 @@ Workspace.init({
     },
     createdAt: {
         type: DataTypes.DATE,
-        defaultValue: moment().format("DD-MM-YYYY"),
         allowNull: false,
     },
 }, {

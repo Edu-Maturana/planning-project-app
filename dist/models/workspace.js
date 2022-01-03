@@ -5,18 +5,37 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const connection_1 = __importDefault(require("../db/connection"));
-const Workspace = connection_1.default.define("workspace", {
+// Create workspace model
+class Workspace extends sequelize_1.Model {
+}
+Workspace.init({
+    id: {
+        type: sequelize_1.DataTypes.STRING,
+        primaryKey: true,
+    },
     name: {
         type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
     },
-    owner: {
-        type: sequelize_1.DataTypes.INTEGER,
+    description: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
     },
-    users: {
-        type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.INTEGER),
+    members: {
+        type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING),
+        allowNull: false,
+        references: {
+            model: "user",
+            key: "id",
+        },
     },
-    projects: {
-        type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.INTEGER),
+    createdAt: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
     },
+}, {
+    sequelize: connection_1.default,
+    modelName: "workspace",
 });
+exports.default = Workspace;
 //# sourceMappingURL=workspace.js.map

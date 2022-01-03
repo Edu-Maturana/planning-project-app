@@ -5,31 +5,73 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const connection_1 = __importDefault(require("../db/connection"));
-const Ticket = connection_1.default.define("ticket", {
+class Ticket extends sequelize_1.Model {
+}
+// Create ticket model
+Ticket.init({
+    id: {
+        type: sequelize_1.DataTypes.STRING,
+        primaryKey: true,
+    },
     title: {
         type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
     },
     description: {
         type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+    },
+    project: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+        references: {
+            model: "project",
+            key: "id",
+        },
     },
     status: {
         type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+        references: {
+            model: "status",
+            key: "id",
+        },
     },
     priority: {
         type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+        references: {
+            model: "priority",
+            key: "id",
+        },
     },
-    projectId: {
-        type: sequelize_1.DataTypes.INTEGER,
+    creator: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+        references: {
+            model: "user",
+            key: "id",
+        },
     },
-    creatorId: {
-        type: sequelize_1.DataTypes.INTEGER,
-    },
-    assigneeId: {
-        type: sequelize_1.DataTypes.INTEGER,
-    },
-    files: {
+    assignee: {
         type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING),
+        allowNull: false,
+        references: {
+            model: "user",
+            key: "id",
+        },
     },
+    createdAt: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+    },
+    updatedAt: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+    },
+}, {
+    sequelize: connection_1.default,
+    modelName: "ticket",
 });
 exports.default = Ticket;
 //# sourceMappingURL=ticket.js.map

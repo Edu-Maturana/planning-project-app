@@ -1,5 +1,4 @@
 import { DataTypes, Model } from "sequelize";
-import moment from "moment";
 
 import connection from "../db/connection";
 
@@ -71,12 +70,10 @@ Ticket.init({
     },
     createdAt: {
         type: DataTypes.DATE,
-        defaultValue: moment().format("DD-MM-YYYY"),
         allowNull: false,
     },
     updatedAt: {
         type: DataTypes.DATE,
-        defaultValue: moment().format("DD-MM-YYYY"),
         allowNull: false,
     },
 }, {

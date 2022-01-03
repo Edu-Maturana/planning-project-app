@@ -17,13 +17,21 @@ const uuid_1 = require("uuid");
 const user_1 = __importDefault(require("../models/user"));
 const bcrypt = require("bcrypt");
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield user_1.default.findAll();
+    const users = yield user_1.default.findAll({
+        attributes: {
+            exclude: ["password", "createdAt", "updatedAt"],
+        },
+    });
     res.json(users);
 });
 exports.getUsers = getUsers;
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    const user = yield user_1.default.findByPk(id);
+    const user = yield user_1.default.findByPk(id, {
+        attributes: {
+            exclude: ["password", "createdAt", "updatedAt"],
+        },
+    });
     if (!user) {
         res.status(404).json({ message: "User not found" });
     }
@@ -32,20 +40,22 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getUser = getUser;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-        res.status(400).json({ message: "Missing parameters" });
-    }
     // Encrypt password
     const encrypted = yield bcrypt.hash(password, 10);
-    const user = yield user_1.default.create({
+    let user = yield user_1.default.create({
         id: (0, uuid_1.v4)(),
         name,
         email,
         password: encrypted,
     });
+    const { id, name: userName, email: userEmail } = user;
     res.json({
         msg: "User signed up successfully!",
-        user,
+        user: {
+            id,
+            name: userName,
+            email: userEmail,
+        },
     });
 });
 exports.createUser = createUser;
