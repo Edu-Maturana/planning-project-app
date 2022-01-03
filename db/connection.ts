@@ -1,12 +1,11 @@
 import { Sequelize } from "sequelize";
-import * as dotenv from 'dotenv';
 
-dotenv.config();
+import envVars from "../config";
 
-const database = process.env.DB_NAME as string;
-const user = process.env.DB_USER as string;
-const password = process.env.DB_PASS as string;
-const host = process.env.DB_HOST as string;
+const database = envVars.DB_NAME as string;
+const user = envVars.DB_USER as string;
+const password = envVars.DB_PASS as string;
+const host = envVars.DB_HOST as string;
 
 const connection = new Sequelize(database, user, password, {
   host,
