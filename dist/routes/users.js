@@ -17,9 +17,8 @@ router.post("/", [
     (0, express_validator_1.check)("password", "Password must have at least 8 characters").isLength({
         min: 8,
     }),
-    validateFields_1.default
+    validateFields_1.default,
 ], users_1.createUser);
-router.put("/:id", users_1.updateUser);
 router.delete("/:id", users_1.deleteUser);
 exports.default = router;
 //# sourceMappingURL=users.js.map

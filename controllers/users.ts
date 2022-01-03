@@ -55,11 +55,6 @@ export const createUser = async (req: Request, res: Response) => {
   });
 };
 
-export const updateUser = (req: Request, res: Response) => {
-  // const id = req.params.id;
-  // TODO Verify if user is the same that is trying to update
-};
-
 export const deleteUser = (req: Request, res: Response) => {
   const id = req.params.id;
   res.json({

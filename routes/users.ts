@@ -5,7 +5,6 @@ import {
   getUsers,
   getUser,
   createUser,
-  updateUser,
   deleteUser,
 } from "../controllers/users";
 import validateFields from "../middlewares/validateFields";
@@ -24,11 +23,10 @@ router.post(
     check("password", "Password must have at least 8 characters").isLength({
       min: 8,
     }),
-    validateFields
+    validateFields,
   ],
   createUser
 );
-router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 
 export default router;
