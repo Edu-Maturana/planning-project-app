@@ -1,17 +1,48 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model } from "sequelize";
+import moment from "moment";
+
 import connection from "../db/connection";
 
-const Workspace = connection.define("workspace", {
+// Create workspace model
+class Workspace extends Model {
+    public id!: number;
+    public name!: string;
+    public description!: string;
+    public members!: String[];
+    public createdAt!: Date;
+}
+
+Workspace.init({
+    id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+    },
     name: {
         type: DataTypes.STRING,
+        allowNull: false,
     },
-    owner : {
-        type: DataTypes.INTEGER,
+    description: {
+        type: DataTypes.STRING,
+        allowNull: false,
     },
-    users : {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
+    members: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false,
+        references: {
+            model: "user",
+            key: "id",
+        },
     },
-    projects : {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: moment().format("DD-MM-YYYY"),
+        allowNull: false,
     },
+}, {
+    sequelize: connection,
+    modelName: "workspace",
 });
+
+export default Workspace;
+
+

@@ -1,31 +1,87 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model } from "sequelize";
+import moment from "moment";
+
 import connection from "../db/connection";
 
-const Ticket = connection.define("ticket", {
+class Ticket extends Model {
+    public id!: string;
+    public title!: string;
+    public description!: string;
+    public priority!: string;
+    public project!: string;
+    public assignee!: string[];
+    public status!: string;
+    public createdAt!: Date;
+    public updatedAt!: Date;
+}
+
+// Create ticket model
+Ticket.init({
+    id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+    },
     title: {
         type: DataTypes.STRING,
+        allowNull: false,
     },
     description: {
         type: DataTypes.STRING,
+        allowNull: false,
+    },
+    project: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        references: {
+            model: "project",
+            key: "id",
+        },
     },
     status: {
         type: DataTypes.STRING,
+        allowNull: false,
+        references: {
+            model: "status",
+            key: "id",
+        },
     },
     priority: {
         type: DataTypes.STRING,
+        allowNull: false,
+        references: {
+            model: "priority",
+            key: "id",
+        },
     },
-    projectId: {
-        type: DataTypes.INTEGER,
+    creator : {
+        type: DataTypes.STRING,
+        allowNull: false,
+        references: {
+            model: "user",
+            key: "id",
+        },
     },
-    creatorId: {
-        type: DataTypes.INTEGER,
-    },
-    assigneeId: {
-        type: DataTypes.INTEGER,
-    },
-    files: {
+    assignee: {
         type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false,
+        references: {
+            model: "user",
+            key: "id",
+        },
     },
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: moment().format("DD-MM-YYYY"),
+        allowNull: false,
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: moment().format("DD-MM-YYYY"),
+        allowNull: false,
+    },
+}, {
+    sequelize: connection,
+    modelName: "ticket",
 });
 
 export default Ticket;
