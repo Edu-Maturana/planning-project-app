@@ -11,6 +11,7 @@ const envVars = {
 
   JWT_SECRET: process.env.JWT_SECRET,
 
+  AWS_BUCKET: process.env.AWS_BUCKET,
   AWS_ACCESS: process.env.AWS_ACCESS,
   AWS_SECRET: process.env.AWS_SECRET,
 };

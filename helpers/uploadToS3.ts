@@ -10,22 +10,25 @@ const s3 = new AWS.S3({
 
 interface file {
   name: string;
+  data: any;
 }
 
-const uploadToS3 = (file: file, extension: string) => {
+const uploadToS3 = async (file: file) => {
   const params = {
-    Bucket: "planning-project",
-    Key: uuidv4()+"."+extension,
-    Body: file.name,
-    ACL: "public-read",
+    Bucket: "planning-project-aws",
+    Key: uuidv4()+"-"+file.name,
+    Body: file.data,
   };
 
-  s3.upload(params, function (err: Error, data: any) {
-    if (err) {
-      throw err;
-    }
-    console.log(`File uploaded successfully. ${data.Location}`);
+  return new Promise((resolve, reject) => {
+    s3.upload(params, (err: Error, data: any) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
   });
-};
+}
 
 export default uploadToS3;

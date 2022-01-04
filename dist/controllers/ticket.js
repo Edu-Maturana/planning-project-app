@@ -120,7 +120,7 @@ const uploadFile = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
     // Upload file to S3
-    const fileUrl = (0, uploadToS3_1.default)(file, fileExtension);
+    const fileUrl = (0, uploadToS3_1.default)(file);
     // Add file to ticket
     yield ticket_1.default.update({
         files: [...ticketExists.files, fileUrl],

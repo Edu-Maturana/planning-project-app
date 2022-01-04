@@ -128,7 +128,7 @@ export const uploadFile = async (req: any, res: Response) => {
   }
 
   // Upload file to S3
-  const fileUrl = uploadToS3(file, fileExtension);
+  const fileUrl = uploadToS3(file);
 
   // Add file to ticket
   await Ticket.update(
