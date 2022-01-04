@@ -5,9 +5,9 @@ import connection from "../db/connection";
 class Project extends Model {
     public id!: number;
     public name!: string;
-    public workspace!: number;
+    public workspace!: string;
     public description!: string;
-    public owner!: string;
+    public createdBy!: string;
     public createdAt!: Date;
 }
 
@@ -32,7 +32,7 @@ Project.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
-    owner: {
+    createdBy: {
         type: DataTypes.STRING,
         allowNull: false,
         references: {

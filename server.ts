@@ -3,7 +3,8 @@ import cors from "cors";
 
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/users";
-import workspaceRoutes from "./routes/workspace";
+import projectRoutes from "./routes/projects";
+import workspaceRoutes from "./routes/workspaces";
 import connection from "./db/connection";
 
 class Server {
@@ -12,6 +13,7 @@ class Server {
   private apiPaths = {
     auth: "/api/auth",
     users: "/api/users",
+    projects: "/api/projects",
     workspace: "/api/workspace",
   };
 
@@ -43,6 +45,7 @@ class Server {
 
   routes() {
     this.app.use(this.apiPaths.auth, authRoutes);
+    this.app.use(this.apiPaths.projects, projectRoutes);
     this.app.use(this.apiPaths.users, userRoutes);
     this.app.use(this.apiPaths.workspace, workspaceRoutes);
   }

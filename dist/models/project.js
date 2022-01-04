@@ -28,7 +28,7 @@ Project.init({
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
-    owner: {
+    createdBy: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
         references: {
