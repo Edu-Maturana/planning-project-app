@@ -14,17 +14,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const users_1 = __importDefault(require("./routes/users"));
 const auth_1 = __importDefault(require("./routes/auth"));
+const users_1 = __importDefault(require("./routes/users"));
+const workspace_1 = __importDefault(require("./routes/workspace"));
 const connection_1 = __importDefault(require("./db/connection"));
 class Server {
     constructor() {
         this.apiPaths = {
-            auth: '/api/auth',
-            users: '/api/users',
+            auth: "/api/auth",
+            users: "/api/users",
+            workspace: "/api/workspace",
         };
         this.app = (0, express_1.default)();
-        this.port = process.env.PORT || '8000';
+        this.port = process.env.PORT || "8000";
         this.dbConnection();
         this.middlewares();
         this.routes();
@@ -33,10 +35,10 @@ class Server {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield connection_1.default.authenticate();
-                console.log('Successful connection to the database.');
+                console.log("Successful connection to the database.");
             }
             catch (error) {
-                console.error('Unable to connect to the database', error);
+                console.error("Unable to connect to the database", error);
             }
         });
     }
@@ -49,10 +51,11 @@ class Server {
     routes() {
         this.app.use(this.apiPaths.auth, auth_1.default);
         this.app.use(this.apiPaths.users, users_1.default);
+        this.app.use(this.apiPaths.workspace, workspace_1.default);
     }
     listen() {
         this.app.listen(this.port, () => {
-            console.log('Server running on port', this.port);
+            console.log("Server running on port", this.port);
         });
     }
 }

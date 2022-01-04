@@ -6,14 +6,16 @@ import User from "../models/user";
 const secret = envVars.JWT_SECRET as string;
 
 interface JwtPayload {
-    id: string;
+  id: string;
 }
 
 const validateJWT = async (req: any, res: any, next: any) => {
-  const token = req.headers.authorization;
+  const token = req.header("auth-token");
 
   if (!token) {
-    return res.status(401).json({ message: "Missing token" });
+    return res.status(401).json({
+      msg: "There is no token",
+    });
   }
 
   try {
@@ -23,13 +25,15 @@ const validateJWT = async (req: any, res: any, next: any) => {
 
     if (!user) {
       return res.status(401).json({
-        msg: "The user does not exist",
+        msg: "User not found",
       });
     }
-
+    req.user = user;
+    next();
   } catch (error) {
-    return res.status(401).json({
-      msg: "Token no válido",
+    console.log(error);
+    res.status(401).json({
+      msg: "Token not valid",
     });
   }
 };

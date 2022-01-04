@@ -25,10 +25,6 @@ User.init({
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
-    avatar: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: true,
-    },
     status: {
         type: sequelize_1.DataTypes.BOOLEAN,
         defaultValue: true,

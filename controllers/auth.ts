@@ -24,7 +24,7 @@ const login = async (req: Request, res: Response) => {
     res.status(401).json({ message: "Invalid password" });
   }
 
-  const token = generateJWT(user);
+  const token = generateJWT(user.id);
 
   res.json({
     token,

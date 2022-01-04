@@ -36,22 +36,27 @@ const config_1 = __importDefault(require("../config"));
 const user_1 = __importDefault(require("../models/user"));
 const secret = config_1.default.JWT_SECRET;
 const validateJWT = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.headers.authorization;
+    const token = req.header("auth-token");
     if (!token) {
-        return res.status(401).json({ message: "Missing token" });
+        return res.status(401).json({
+            msg: "There is no token",
+        });
     }
     try {
         const { id } = jwt.verify(token, secret);
         const user = yield user_1.default.findByPk(id);
         if (!user) {
             return res.status(401).json({
-                msg: "The user does not exist",
+                msg: "User not found",
             });
         }
+        req.user = user;
+        next();
     }
     catch (error) {
-        return res.status(401).json({
-            msg: "Token no válido",
+        console.log(error);
+        res.status(401).json({
+            msg: "Token not valid",
         });
     }
 });

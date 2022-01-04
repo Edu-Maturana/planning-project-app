@@ -30,10 +30,6 @@ User.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
-    avatar: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
     status: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,

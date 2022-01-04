@@ -29,7 +29,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!isPasswordValid) {
         res.status(401).json({ message: "Invalid password" });
     }
-    const token = (0, generateJWT_1.default)(user);
+    const token = (0, generateJWT_1.default)(user.id);
     res.json({
         token,
     });

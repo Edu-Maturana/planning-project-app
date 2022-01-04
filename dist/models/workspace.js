@@ -17,12 +17,21 @@ Workspace.init({
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
+    owner: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+        references: {
+            model: "user",
+            key: "id",
+        },
+    },
     description: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
     members: {
-        type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING),
+        type: sequelize_1.DataTypes.JSON,
+        defaultValue: [],
         allowNull: false,
         references: {
             model: "user",
@@ -32,6 +41,12 @@ Workspace.init({
     createdAt: {
         type: sequelize_1.DataTypes.DATE,
         allowNull: false,
+        defaultValue: sequelize_1.DataTypes.NOW,
+    },
+    updatedAt: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize_1.DataTypes.NOW,
     },
 }, {
     sequelize: connection_1.default,
