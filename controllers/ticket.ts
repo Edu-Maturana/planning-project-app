@@ -6,6 +6,8 @@ import Project from "../models/project";
 import Workspace from "../models/workspace";
 import uploadToS3 from "../helpers/uploadToS3";
 
+const validExtensions = ["jpg", "png", "jpeg"];
+
 export const createTicket = async (req: any, res: Response) => {
   const { title, description } = req.body;
   const project = req.params.id;
@@ -87,7 +89,49 @@ export const updateTicket = async (req: any, res: Response) => {
   });
 };
 
-const validExtensions = ["jpg", "png", "jpeg"];
+const changeStatus = async (req: any, res: Response) => {
+  const { status } = req.body;
+  const ticket = req.params.id;
+
+  // Check if ticket exists
+  const ticketExists = await Ticket.findByPk(ticket);
+  if (!ticketExists) {
+    return res.status(404).json({
+      message: "Ticket not found",
+    });
+  }
+
+  // Verify if user is allowed to update ticket in the workspace
+  const user = req.user.id;
+  const project = ticketExists.project;
+  const projectExists = await Project.findByPk(project);
+
+  const workspace = projectExists.workspace;
+  const workspaceUsers = await Workspace.findByPk(workspace);
+
+  if (!workspaceUsers.members.includes(user)) {
+    return res.status(403).json({
+      message: "Permission denied",
+    });
+  }
+
+  // Update ticket
+  await Ticket.update(
+    {
+      status,
+    },
+    {
+      where: {
+        id: ticket,
+      },
+    }
+  );
+
+  return res.status(200).json({
+    message: "Ticket updated successfully",
+  });
+};
+
 export const uploadFile = async (req: any, res: Response) => {
   const ticket = req.params.id;
 
@@ -103,17 +147,6 @@ export const uploadFile = async (req: any, res: Response) => {
   if (!ticketExists) {
     return res.status(404).json({
       message: "Ticket not found",
-    });
-  }
-
-  // Verify if user is creator or assignee
-  const user = req.user.id;
-  const isAssignee = ticketExists.assignee.includes(user);
-  const isCreator = ticketExists.creator == user;
-
-  if (!isAssignee && !isCreator) {
-    return res.status(403).json({
-      message: "Permission denied",
     });
   }
 

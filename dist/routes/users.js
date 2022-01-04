@@ -12,7 +12,7 @@ router.get("/", users_1.getUsers);
 router.get("/:id", users_1.getUser);
 router.post("/", [
     (0, express_validator_1.check)("name", "Name is required").not().isEmpty(),
-    (0, express_validator_1.check)("email", "Email is required").isEmail(),
+    (0, express_validator_1.check)("email", "Email is not valid").isEmail(),
     (0, express_validator_1.check)("password", "Password is required").not().isEmpty(),
     (0, express_validator_1.check)("password", "Password must have at least 8 characters").isLength({
         min: 8,

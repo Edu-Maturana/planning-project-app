@@ -18,6 +18,7 @@ const ticket_1 = __importDefault(require("../models/ticket"));
 const project_1 = __importDefault(require("../models/project"));
 const workspace_1 = __importDefault(require("../models/workspace"));
 const uploadToS3_1 = __importDefault(require("../helpers/uploadToS3"));
+const validExtensions = ["jpg", "png", "jpeg"];
 const createTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description } = req.body;
     const project = req.params.id;
@@ -86,7 +87,39 @@ const updateTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     });
 });
 exports.updateTicket = updateTicket;
-const validExtensions = ["jpg", "png", "jpeg"];
+const changeStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { status } = req.body;
+    const ticket = req.params.id;
+    // Check if ticket exists
+    const ticketExists = yield ticket_1.default.findByPk(ticket);
+    if (!ticketExists) {
+        return res.status(404).json({
+            message: "Ticket not found",
+        });
+    }
+    // Verify if user is allowed to update ticket in the workspace
+    const user = req.user.id;
+    const project = ticketExists.project;
+    const projectExists = yield project_1.default.findByPk(project);
+    const workspace = projectExists.workspace;
+    const workspaceUsers = yield workspace_1.default.findByPk(workspace);
+    if (!workspaceUsers.members.includes(user)) {
+        return res.status(403).json({
+            message: "Permission denied",
+        });
+    }
+    // Update ticket
+    yield ticket_1.default.update({
+        status,
+    }, {
+        where: {
+            id: ticket,
+        },
+    });
+    return res.status(200).json({
+        message: "Ticket updated successfully",
+    });
+});
 const uploadFile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const ticket = req.params.id;
     // Check if there are files
@@ -100,15 +133,6 @@ const uploadFile = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (!ticketExists) {
         return res.status(404).json({
             message: "Ticket not found",
-        });
-    }
-    // Verify if user is creator or assignee
-    const user = req.user.id;
-    const isAssignee = ticketExists.assignee.includes(user);
-    const isCreator = ticketExists.creator == user;
-    if (!isAssignee && !isCreator) {
-        return res.status(403).json({
-            message: "Permission denied",
         });
     }
     const file = req.files.file;

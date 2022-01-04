@@ -8,23 +8,6 @@ export const createProject = async (req: any, res: Response) => {
   const { name, description } = req.body;
   const workspace = req.params.id;
 
-  const workspaceExists = await Workspace.findByPk(workspace);
-
-  if (!workspaceExists) {
-    return res.status(404).json({
-      msg: "Workspace not found",
-    });
-  }
-
-  // verify if the user belongs to the workspace
-  const isMember = workspaceExists.members.includes(req.user.id);
-
-  if (!isMember) {
-    return res.status(401).json({
-      msg: "You are not a member of this workspace",
-    });
-  }
-
   const project = await Project.create({
     id: uuidv4(),
     name,
@@ -57,15 +40,6 @@ export const deleteProject = async (req: any, res: Response) => {
   if (!workspace) {
     return res.status(404).json({
       msg: "Workspace not found",
-    });
-  }
-
-  // verify if the user belongs to the workspace
-  const isMember = workspace.members.includes(req.user.id);
-
-  if (!isMember) {
-    return res.status(401).json({
-      msg: "You are not a member of this workspace",
     });
   }
 
