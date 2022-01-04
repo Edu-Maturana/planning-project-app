@@ -9,16 +9,19 @@ class Priority extends sequelize_1.Model {
 }
 Priority.init({
     id: {
-        type: sequelize_1.DataTypes.STRING,
+        type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
+        defaultValue: 1,
     },
-    name: {
+    level: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
+        defaultValue: "Low",
     },
     color: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
+        defaultValue: "green",
     },
 }, {
     sequelize: connection_1.default,

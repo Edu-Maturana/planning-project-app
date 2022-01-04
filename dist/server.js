@@ -14,9 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const fileUpload = require("express-fileupload");
 const auth_1 = __importDefault(require("./routes/auth"));
 const users_1 = __importDefault(require("./routes/users"));
 const projects_1 = __importDefault(require("./routes/projects"));
+const tickets_1 = __importDefault(require("./routes/tickets"));
 const workspaces_1 = __importDefault(require("./routes/workspaces"));
 const connection_1 = __importDefault(require("./db/connection"));
 class Server {
@@ -25,6 +27,7 @@ class Server {
             auth: "/api/auth",
             users: "/api/users",
             projects: "/api/projects",
+            tickets: "/api/tickets",
             workspace: "/api/workspace",
         };
         this.app = (0, express_1.default)();
@@ -49,11 +52,18 @@ class Server {
         this.app.use((0, cors_1.default)());
         // Body Parser
         this.app.use(express_1.default.json());
+        // File Upload
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: "/tmp/",
+            createParentPath: true,
+        }));
     }
     routes() {
         this.app.use(this.apiPaths.auth, auth_1.default);
         this.app.use(this.apiPaths.projects, projects_1.default);
         this.app.use(this.apiPaths.users, users_1.default);
+        this.app.use(this.apiPaths.tickets, tickets_1.default);
         this.app.use(this.apiPaths.workspace, workspaces_1.default);
     }
     listen() {

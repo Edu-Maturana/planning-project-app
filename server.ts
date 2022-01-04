@@ -1,9 +1,11 @@
 import express, { Application } from "express";
 import cors from "cors";
+const fileUpload = require("express-fileupload");
 
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/users";
 import projectRoutes from "./routes/projects";
+import ticketRoutes from "./routes/tickets";
 import workspaceRoutes from "./routes/workspaces";
 import connection from "./db/connection";
 
@@ -14,6 +16,7 @@ class Server {
     auth: "/api/auth",
     users: "/api/users",
     projects: "/api/projects",
+    tickets: "/api/tickets",
     workspace: "/api/workspace",
   };
 
@@ -41,12 +44,22 @@ class Server {
 
     // Body Parser
     this.app.use(express.json());
+
+    // File Upload
+    this.app.use(
+      fileUpload({
+        useTempFiles: true,
+        tempFileDir: "/tmp/",
+        createParentPath: true,
+      })
+    );
   }
 
   routes() {
     this.app.use(this.apiPaths.auth, authRoutes);
     this.app.use(this.apiPaths.projects, projectRoutes);
     this.app.use(this.apiPaths.users, userRoutes);
+    this.app.use(this.apiPaths.tickets, ticketRoutes);
     this.app.use(this.apiPaths.workspace, workspaceRoutes);
   }
 

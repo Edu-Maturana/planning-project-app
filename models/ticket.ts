@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, DATE, Model } from "sequelize";
 
 import connection from "../db/connection";
 
@@ -6,10 +6,11 @@ class Ticket extends Model {
     public id!: string;
     public title!: string;
     public description!: string;
-    public priority!: string;
+    public priority!: number;
     public project!: string;
     public assignee!: string[];
-    public status!: string;
+    public files!: string[];
+    public status!: number;
     public createdAt!: Date;
     public updatedAt!: Date;
 }
@@ -37,20 +38,22 @@ Ticket.init({
         },
     },
     status: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
             model: "status",
             key: "id",
         },
+        defaultValue: 1,
     },
     priority: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
             model: "priority",
             key: "id",
         },
+        defaultValue: 1,
     },
     creator : {
         type: DataTypes.STRING,
@@ -61,12 +64,18 @@ Ticket.init({
         },
     },
     assignee: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.JSON,
         allowNull: false,
         references: {
             model: "user",
             key: "id",
         },
+        defaultValue: [],
+    },
+    files: {
+        type: DataTypes.JSON,
+        allowNull: false,
+        defaultValue: [],
     },
     createdAt: {
         type: DataTypes.DATE,

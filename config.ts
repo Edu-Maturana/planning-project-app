@@ -10,6 +10,9 @@ const envVars = {
   DB_PORT: process.env.DB_PORT,
 
   JWT_SECRET: process.env.JWT_SECRET,
+
+  AWS_ACCESS: process.env.AWS_ACCESS,
+  AWS_SECRET: process.env.AWS_SECRET,
 };
 
 export default envVars;

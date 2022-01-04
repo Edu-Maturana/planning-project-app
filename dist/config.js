@@ -28,6 +28,8 @@ const envVars = {
     DB_HOST: process.env.DB_HOST,
     DB_PORT: process.env.DB_PORT,
     JWT_SECRET: process.env.JWT_SECRET,
+    AWS_ACCESS: process.env.AWS_ACCESS,
+    AWS_SECRET: process.env.AWS_SECRET,
 };
 exports.default = envVars;
 //# sourceMappingURL=config.js.map

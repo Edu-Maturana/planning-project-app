@@ -10,12 +10,14 @@ class Status extends sequelize_1.Model {
 }
 Status.init({
     id: {
-        type: sequelize_1.DataTypes.STRING,
+        type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
+        defaultValue: 1,
     },
     name: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
+        defaultValue: "Backlog",
     },
 }, {
     sequelize: connection_1.default,

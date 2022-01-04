@@ -30,20 +30,22 @@ Ticket.init({
         },
     },
     status: {
-        type: sequelize_1.DataTypes.STRING,
+        type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
         references: {
             model: "status",
             key: "id",
         },
+        defaultValue: 1,
     },
     priority: {
-        type: sequelize_1.DataTypes.STRING,
+        type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
         references: {
             model: "priority",
             key: "id",
         },
+        defaultValue: 1,
     },
     creator: {
         type: sequelize_1.DataTypes.STRING,
@@ -54,12 +56,18 @@ Ticket.init({
         },
     },
     assignee: {
-        type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING),
+        type: sequelize_1.DataTypes.JSON,
         allowNull: false,
         references: {
             model: "user",
             key: "id",
         },
+        defaultValue: [],
+    },
+    files: {
+        type: sequelize_1.DataTypes.JSON,
+        allowNull: false,
+        defaultValue: [],
     },
     createdAt: {
         type: sequelize_1.DataTypes.DATE,
