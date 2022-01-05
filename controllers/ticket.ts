@@ -19,17 +19,7 @@ export const createTicket = async (req: any, res: Response) => {
       message: "Project not found",
     });
   }
-
-  // Verify if user is allowed to create ticket in the workspace
   const user = req.user.id;
-  const workspace = projectExists.workspace;
-  const workspaceUsers = await Workspace.findByPk(workspace);
-
-  if (!workspaceUsers.members.includes(user)) {
-    return res.status(403).json({
-      message: "Permission denied",
-    });
-  }
 
   // Create ticket
   const ticket = await Ticket.create({
@@ -58,19 +48,6 @@ export const updateTicket = async (req: any, res: Response) => {
     });
   }
 
-  // Verify if user is allowed to update ticket in the workspace
-  const user = req.user.id;
-  const project = ticketExists.project;
-  const projectExists = await Project.findByPk(project);
-  const workspace = projectExists.workspace;
-  const workspaceUsers = await Workspace.findByPk(workspace);
-
-  if (!workspaceUsers.members.includes(user)) {
-    return res.status(403).json({
-      message: "Permission denied",
-    });
-  }
-
   // Update ticket
   await Ticket.update(
     {
@@ -89,29 +66,15 @@ export const updateTicket = async (req: any, res: Response) => {
   });
 };
 
-const changeStatus = async (req: any, res: Response) => {
-  const { status } = req.body;
+export const changeStatus = async (req: any, res: Response) => {
   const ticket = req.params.id;
+  const { status } = req.body;
 
   // Check if ticket exists
   const ticketExists = await Ticket.findByPk(ticket);
   if (!ticketExists) {
     return res.status(404).json({
       message: "Ticket not found",
-    });
-  }
-
-  // Verify if user is allowed to update ticket in the workspace
-  const user = req.user.id;
-  const project = ticketExists.project;
-  const projectExists = await Project.findByPk(project);
-
-  const workspace = projectExists.workspace;
-  const workspaceUsers = await Workspace.findByPk(workspace);
-
-  if (!workspaceUsers.members.includes(user)) {
-    return res.status(403).json({
-      message: "Permission denied",
     });
   }
 
@@ -126,10 +89,31 @@ const changeStatus = async (req: any, res: Response) => {
       },
     }
   );
+};
 
-  return res.status(200).json({
-    message: "Ticket updated successfully",
-  });
+export const changePriority = async (req: any, res: Response) => {
+  const ticket = req.params.id;
+  const { priority } = req.body;
+
+  // Check if ticket exists
+  const ticketExists = await Ticket.findByPk(ticket);
+  if (!ticketExists) {
+    return res.status(404).json({
+      message: "Ticket not found",
+    });
+  }
+
+  // Update ticket
+  await Ticket.update(
+    {
+      priority,
+    },
+    {
+      where: {
+        id: ticket,
+      },
+    }
+  );
 };
 
 export const uploadFile = async (req: any, res: Response) => {
