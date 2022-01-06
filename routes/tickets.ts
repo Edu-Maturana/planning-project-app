@@ -49,7 +49,7 @@ router.put(
     validateJWT,
     isMemberTicket,
     check("status", "Status is required").not().isEmpty(),
-    check("status", "Status is invalid").isIn([1, 2, 3]),
+    check("status", "Status is invalid").isIn([1, 2, 3, 4]),
     validateFields,
   ],
   changeStatus

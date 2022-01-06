@@ -32,7 +32,7 @@ router.put("/status/:id", [
     validateJWT_1.default,
     isMember_1.isMemberTicket,
     (0, express_validator_1.check)("status", "Status is required").not().isEmpty(),
-    (0, express_validator_1.check)("status", "Status is invalid").isIn([1, 2, 3]),
+    (0, express_validator_1.check)("status", "Status is invalid").isIn([1, 2, 3, 4]),
     validateFields_1.default,
 ], ticket_1.changeStatus);
 router.put("/priority/:id", [
