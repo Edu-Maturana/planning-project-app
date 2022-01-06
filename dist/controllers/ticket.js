@@ -12,11 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadFile = exports.updateTicket = exports.createTicket = void 0;
+exports.uploadFile = exports.changePriority = exports.changeStatus = exports.updateTicket = exports.createTicket = void 0;
 const uuid_1 = require("uuid");
 const ticket_1 = __importDefault(require("../models/ticket"));
 const project_1 = __importDefault(require("../models/project"));
-const workspace_1 = __importDefault(require("../models/workspace"));
 const uploadToS3_1 = __importDefault(require("../helpers/uploadToS3"));
 const validExtensions = ["jpg", "png", "jpeg"];
 const createTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,21 +28,14 @@ const createTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             message: "Project not found",
         });
     }
-    // Verify if user is allowed to create ticket in the workspace
     const user = req.user.id;
-    const workspace = projectExists.workspace;
-    const workspaceUsers = yield workspace_1.default.findByPk(workspace);
-    if (!workspaceUsers.members.includes(user)) {
-        return res.status(403).json({
-            message: "Permission denied",
-        });
-    }
     // Create ticket
     const ticket = yield ticket_1.default.create({
         id: (0, uuid_1.v4)(),
         title,
         description,
         project,
+        workspace: projectExists.workspace,
         creator: user,
     });
     return res.status(201).json({
@@ -62,17 +54,6 @@ const updateTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             message: "Ticket not found",
         });
     }
-    // Verify if user is allowed to update ticket in the workspace
-    const user = req.user.id;
-    const project = ticketExists.project;
-    const projectExists = yield project_1.default.findByPk(project);
-    const workspace = projectExists.workspace;
-    const workspaceUsers = yield workspace_1.default.findByPk(workspace);
-    if (!workspaceUsers.members.includes(user)) {
-        return res.status(403).json({
-            message: "Permission denied",
-        });
-    }
     // Update ticket
     yield ticket_1.default.update({
         title,
@@ -88,24 +69,13 @@ const updateTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.updateTicket = updateTicket;
 const changeStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { status } = req.body;
     const ticket = req.params.id;
+    const { status } = req.body;
     // Check if ticket exists
     const ticketExists = yield ticket_1.default.findByPk(ticket);
     if (!ticketExists) {
         return res.status(404).json({
             message: "Ticket not found",
-        });
-    }
-    // Verify if user is allowed to update ticket in the workspace
-    const user = req.user.id;
-    const project = ticketExists.project;
-    const projectExists = yield project_1.default.findByPk(project);
-    const workspace = projectExists.workspace;
-    const workspaceUsers = yield workspace_1.default.findByPk(workspace);
-    if (!workspaceUsers.members.includes(user)) {
-        return res.status(403).json({
-            message: "Permission denied",
         });
     }
     // Update ticket
@@ -116,10 +86,28 @@ const changeStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             id: ticket,
         },
     });
-    return res.status(200).json({
-        message: "Ticket updated successfully",
+});
+exports.changeStatus = changeStatus;
+const changePriority = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const ticket = req.params.id;
+    const { priority } = req.body;
+    // Check if ticket exists
+    const ticketExists = yield ticket_1.default.findByPk(ticket);
+    if (!ticketExists) {
+        return res.status(404).json({
+            message: "Ticket not found",
+        });
+    }
+    // Update ticket
+    yield ticket_1.default.update({
+        priority,
+    }, {
+        where: {
+            id: ticket,
+        },
     });
 });
+exports.changePriority = changePriority;
 const uploadFile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const ticket = req.params.id;
     // Check if there are files

@@ -27,6 +27,7 @@ export const createTicket = async (req: any, res: Response) => {
     title,
     description,
     project,
+    workspace: projectExists.workspace,
     creator: user,
   });
 

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { check } from "express-validator";
 
 import { createProject, deleteProject } from "../controllers/project";
-import { isMember } from "../helpers/isMember";
+import { isMemberProject, isMemberWorkspace } from "../helpers/isMember";
 import validateFields from "../middlewares/validateFields";
 import validateJWT from "../middlewares/validateJWT";
 
@@ -12,7 +12,7 @@ router.post(
   "/:id",
   [
     validateJWT,
-    isMember,
+    isMemberWorkspace,
     check("name", "Name is required").not().isEmpty(),
     check("description", "Description is required").not().isEmpty(),
     validateFields,
@@ -20,6 +20,10 @@ router.post(
   createProject
 );
 
-router.delete("/:id", [validateJWT, isMember], deleteProject);
+router.delete(
+  "/:id",
+  [validateJWT, isMemberProject, validateFields],
+  deleteProject
+);
 
 export default router;

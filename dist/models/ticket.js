@@ -1,37 +1,28 @@
-import { DataTypes, DATE, Model } from "sequelize";
-
-import connection from "../db/connection";
-
-class Ticket extends Model {
-    public id!: string;
-    public title!: string;
-    public description!: string;
-    public priority!: number;
-    public project!: string;
-    public workspace!: string;
-    public assignee!: string[];
-    public files!: string[];
-    public status!: number;
-    public createdAt!: Date;
-    public updatedAt!: Date;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const sequelize_1 = require("sequelize");
+const connection_1 = __importDefault(require("../db/connection"));
+class Ticket extends sequelize_1.Model {
 }
-
 // Create ticket model
 Ticket.init({
     id: {
-        type: DataTypes.STRING,
+        type: sequelize_1.DataTypes.STRING,
         primaryKey: true,
     },
     title: {
-        type: DataTypes.STRING,
+        type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
     description: {
-        type: DataTypes.STRING,
+        type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
     project: {
-        type: DataTypes.STRING,
+        type: sequelize_1.DataTypes.STRING,
         allowNull: false,
         references: {
             model: "project",
@@ -39,7 +30,7 @@ Ticket.init({
         },
     },
     workspace: {
-        type: DataTypes.STRING,
+        type: sequelize_1.DataTypes.STRING,
         allowNull: false,
         references: {
             model: "workspace",
@@ -47,7 +38,7 @@ Ticket.init({
         },
     },
     status: {
-        type: DataTypes.INTEGER,
+        type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
         references: {
             model: "status",
@@ -56,7 +47,7 @@ Ticket.init({
         defaultValue: 1,
     },
     priority: {
-        type: DataTypes.INTEGER,
+        type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
         references: {
             model: "priority",
@@ -64,8 +55,8 @@ Ticket.init({
         },
         defaultValue: 1,
     },
-    creator : {
-        type: DataTypes.STRING,
+    creator: {
+        type: sequelize_1.DataTypes.STRING,
         allowNull: false,
         references: {
             model: "user",
@@ -73,7 +64,7 @@ Ticket.init({
         },
     },
     assignee: {
-        type: DataTypes.JSON,
+        type: sequelize_1.DataTypes.JSON,
         allowNull: false,
         references: {
             model: "user",
@@ -82,21 +73,21 @@ Ticket.init({
         defaultValue: [],
     },
     files: {
-        type: DataTypes.JSON,
+        type: sequelize_1.DataTypes.JSON,
         allowNull: false,
         defaultValue: [],
     },
     createdAt: {
-        type: DataTypes.DATE,
+        type: sequelize_1.DataTypes.DATE,
         allowNull: false,
     },
     updatedAt: {
-        type: DataTypes.DATE,
+        type: sequelize_1.DataTypes.DATE,
         allowNull: false,
     },
 }, {
-    sequelize: connection,
+    sequelize: connection_1.default,
     modelName: "ticket",
 });
-
-export default Ticket;
+exports.default = Ticket;
+//# sourceMappingURL=ticket.js.map

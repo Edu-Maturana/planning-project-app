@@ -26,8 +26,15 @@ const login = async (req: Request, res: Response) => {
 
   const token = generateJWT(user.id);
 
-  res.json({
+  const data = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
     token,
+  }
+
+  res.json({
+    data
   });
 };
 

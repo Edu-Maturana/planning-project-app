@@ -7,7 +7,7 @@ class User extends Model {
     public name!: string;
     public email!: string;
     public password!: string;
-    public avatar!: string;
+    public isMember!: string[];
     public createdAt!: Date;
     public updatedAt!: Date;
 }
@@ -30,10 +30,10 @@ User.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
-    status: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
+    isMember: {
+        type: DataTypes.JSON,
         allowNull: false,
+        defaultValue: [],
     },
     createdAt: {
         type: DataTypes.DATE,
