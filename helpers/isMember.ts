@@ -56,11 +56,11 @@ export const isMemberProject = async (req: any, res: Response, next: any) => {
 
   const members = workspaceExists.members;
 
-  const isMember = members.find((member: any) => member.id === user);
+  const isMember = members.includes(user);
 
   if (!isMember) {
     return res.status(401).json({
-      message: "You are not authorized to access this resource",
+      message: "Permission denied",
     });
   }
 
@@ -96,7 +96,7 @@ export const isMemberTicket = async (req: any, res: Response, next: any) => {
 
   if (!isMember) {
     return res.status(401).json({
-      message: "You are not authorized to access this resource",
+      message: "Permission denied",
     });
   }
 

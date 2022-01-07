@@ -31,7 +31,17 @@ const createWorkspace = (req, res) => __awaiter(void 0, void 0, void 0, function
         owner,
         members: [owner],
     });
-    res.json(workspace);
+    const data = {
+        id: workspace.id,
+        name: workspace.name,
+        description: workspace.description,
+        owner: workspace.owner,
+        members: workspace.members,
+    };
+    res.json({
+        msg: "Workspace created successfully",
+        data,
+    });
 });
 exports.createWorkspace = createWorkspace;
 const addMember = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

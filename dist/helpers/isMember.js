@@ -53,10 +53,10 @@ const isMemberProject = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         });
     }
     const members = workspaceExists.members;
-    const isMember = members.find((member) => member.id === user);
+    const isMember = members.includes(user);
     if (!isMember) {
         return res.status(401).json({
-            message: "You are not authorized to access this resource",
+            message: "Permission denied",
         });
     }
     next();
@@ -82,7 +82,7 @@ const isMemberTicket = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     const isMember = members.find((member) => member.id === user);
     if (!isMember) {
         return res.status(401).json({
-            message: "You are not authorized to access this resource",
+            message: "Permission denied",
         });
     }
     next();

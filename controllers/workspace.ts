@@ -23,47 +23,58 @@ export const createWorkspace = async (req: any, res: Response) => {
     members: [owner],
   });
 
-  res.json(workspace);
+  const data = {
+    id: workspace.id,
+    name: workspace.name,
+    description: workspace.description,
+    owner: workspace.owner,
+    members: workspace.members,
+  };
+
+  res.json({
+    msg: "Workspace created successfully",
+    data,
+  });
 };
 
 export const addMember = async (req: any, res: Response) => {
-    const { userId } = req.body;
-    const workspaceId = req.params.id;
+  const { userId } = req.body;
+  const workspaceId = req.params.id;
 
-    const workspace = await Workspace.findByPk(workspaceId);
+  const workspace = await Workspace.findByPk(workspaceId);
 
-    if (!workspace) {
-        return res.status(404).json({
-            msg: "Workspace not found",
-        });
-    }
-
-    if (workspace.owner !== req.user.id) {
-        return res.status(401).json({
-            msg: "You are not the owner of this workspace",
-        });
-    }
-
-    const user = await User.findByPk(userId);
-
-    if (!user) {
-        return res.status(404).json({
-            msg: "User not found",
-        });
-    }
-
-    if (workspace.members.includes(userId)) {
-        return res.status(400).json({
-            msg: "User is already a member of this workspace",
-        });
-    }
-
-    const updatedWorkspace = await workspace.update({
-        members: [...workspace.members, userId],
+  if (!workspace) {
+    return res.status(404).json({
+      msg: "Workspace not found",
     });
+  }
 
-    res.json({
-        msg: "User added successfully",
-        workspace: updatedWorkspace,
+  if (workspace.owner !== req.user.id) {
+    return res.status(401).json({
+      msg: "You are not the owner of this workspace",
     });
+  }
+
+  const user = await User.findByPk(userId);
+
+  if (!user) {
+    return res.status(404).json({
+      msg: "User not found",
+    });
+  }
+
+  if (workspace.members.includes(userId)) {
+    return res.status(400).json({
+      msg: "User is already a member of this workspace",
+    });
+  }
+
+  const updatedWorkspace = await workspace.update({
+    members: [...workspace.members, userId],
+  });
+
+  res.json({
+    msg: "User added successfully",
+    workspace: updatedWorkspace,
+  });
 };
