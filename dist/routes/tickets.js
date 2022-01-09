@@ -20,7 +20,7 @@ router.post("/:id", [
 router.put("/upload/:id", [
     validateJWT_1.default,
     isMember_1.isMemberTicket,
-], ticket_1.uploadFile);
+]);
 router.put("/:id", [
     validateJWT_1.default,
     isMember_1.isMemberTicket,

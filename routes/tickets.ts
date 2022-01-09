@@ -6,7 +6,7 @@ import {
   changePriority,
   createTicket,
   updateTicket,
-  uploadFile,
+  // uploadFile,
 } from "../controllers/ticket";
 import { isMemberTicket, isMemberProject } from "../helpers/isMember";
 import validateFields from "../middlewares/validateFields";
@@ -29,7 +29,7 @@ router.post(
 router.put("/upload/:id", [
   validateJWT,
   isMemberTicket,
-], uploadFile);
+], );
 
 router.put(
   "/:id",
