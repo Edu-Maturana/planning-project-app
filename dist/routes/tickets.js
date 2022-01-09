@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const ticket_1 = require("../controllers/ticket");
+const upload_1 = require("../controllers/upload");
 const isMember_1 = require("../helpers/isMember");
 const validateFields_1 = __importDefault(require("../middlewares/validateFields"));
 const validateJWT_1 = __importDefault(require("../middlewares/validateJWT"));
@@ -17,10 +18,6 @@ router.post("/:id", [
     (0, express_validator_1.check)("description", "Description is required").not().isEmpty(),
     validateFields_1.default,
 ], ticket_1.createTicket);
-router.put("/upload/:id", [
-    validateJWT_1.default,
-    isMember_1.isMemberTicket,
-]);
 router.put("/:id", [
     validateJWT_1.default,
     isMember_1.isMemberTicket,
@@ -42,5 +39,7 @@ router.put("/priority/:id", [
     (0, express_validator_1.check)("priority", "Priority is invalid").isIn([1, 2, 3]),
     validateFields_1.default,
 ], ticket_1.changePriority);
+router.put("/files/:id", [validateJWT_1.default, isMember_1.isMemberTicket, validateFields_1.default], upload_1.uploadFileToTicket);
+router.delete("/files/:id", [validateJWT_1.default, isMember_1.isMemberTicket], upload_1.deleteFileFromTicket);
 exports.default = router;
 //# sourceMappingURL=tickets.js.map

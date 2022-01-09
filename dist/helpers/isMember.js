@@ -79,7 +79,7 @@ const isMemberTicket = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         });
     }
     const members = workspaceExists.members;
-    const isMember = members.find((member) => member.id === user);
+    const isMember = members.includes(user);
     if (!isMember) {
         return res.status(401).json({
             message: "Permission denied",

@@ -3,10 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import Ticket from "../models/ticket";
 import Project from "../models/project";
-import Workspace from "../models/workspace";
-// import uploadToS3 from "../helpers/uploadToS3";
-
-const validExtensions = ["jpg", "png", "jpeg"];
 
 export const createTicket = async (req: any, res: Response) => {
   const { title, description } = req.body;

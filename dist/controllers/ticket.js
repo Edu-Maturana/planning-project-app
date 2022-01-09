@@ -16,8 +16,6 @@ exports.changePriority = exports.changeStatus = exports.updateTicket = exports.c
 const uuid_1 = require("uuid");
 const ticket_1 = __importDefault(require("../models/ticket"));
 const project_1 = __importDefault(require("../models/project"));
-// import uploadToS3 from "../helpers/uploadToS3";
-const validExtensions = ["jpg", "png", "jpeg"];
 const createTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description } = req.body;
     const project = req.params.id;

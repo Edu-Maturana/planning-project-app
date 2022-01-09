@@ -6,8 +6,11 @@ import {
   changePriority,
   createTicket,
   updateTicket,
-  // uploadFile,
 } from "../controllers/ticket";
+import {
+  deleteFileFromTicket,
+  uploadFileToTicket,
+} from "../controllers/upload";
 import { isMemberTicket, isMemberProject } from "../helpers/isMember";
 import validateFields from "../middlewares/validateFields";
 import validateJWT from "../middlewares/validateJWT";
@@ -25,11 +28,6 @@ router.post(
   ],
   createTicket
 );
-
-router.put("/upload/:id", [
-  validateJWT,
-  isMemberTicket,
-], );
 
 router.put(
   "/:id",
@@ -65,6 +63,17 @@ router.put(
     validateFields,
   ],
   changePriority
+);
+
+router.put(
+  "/files/:id",
+  [validateJWT, isMemberTicket, validateFields],
+  uploadFileToTicket
+);
+router.delete(
+  "/files/:id",
+  [validateJWT, isMemberTicket],
+  deleteFileFromTicket
 );
 
 export default router;
