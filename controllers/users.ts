@@ -101,11 +101,3 @@ export const createUser = async (req: Request, res: Response) => {
     },
   });
 };
-
-export const deleteUser = (req: Request, res: Response) => {
-  const id = req.params.id;
-  res.json({
-    msg: `Delete user ${id}`,
-    user: id,
-  });
-};

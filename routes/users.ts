@@ -5,7 +5,6 @@ import {
   getTeammates,
   getTeammate,
   createUser,
-  deleteUser,
 } from "../controllers/users";
 import validateFields from "../middlewares/validateFields";
 import validateJWT from "../middlewares/validateJWT";
@@ -35,6 +34,5 @@ router.post(
   ],
   createUser
 );
-router.delete("/:id", deleteUser);
 
 export default router;

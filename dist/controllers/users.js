@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.createUser = exports.getTeammate = exports.getTeammates = void 0;
+exports.createUser = exports.getTeammate = exports.getTeammates = void 0;
 const uuid_1 = require("uuid");
 const bcrypt = require("bcrypt");
 const user_1 = __importDefault(require("../models/user"));
@@ -95,12 +95,4 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     });
 });
 exports.createUser = createUser;
-const deleteUser = (req, res) => {
-    const id = req.params.id;
-    res.json({
-        msg: `Delete user ${id}`,
-        user: id,
-    });
-};
-exports.deleteUser = deleteUser;
 //# sourceMappingURL=users.js.map

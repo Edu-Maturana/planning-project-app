@@ -26,6 +26,5 @@ router.post("/", [
     }),
     validateFields_1.default,
 ], users_1.createUser);
-router.delete("/:id", users_1.deleteUser);
 exports.default = router;
 //# sourceMappingURL=users.js.map
