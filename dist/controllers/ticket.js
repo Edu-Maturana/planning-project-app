@@ -12,10 +12,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTicket = exports.updateTicket = exports.createTicket = void 0;
+exports.deleteTicket = exports.updateTicket = exports.createTicket = exports.getTicket = exports.getTickets = void 0;
 const uuid_1 = require("uuid");
 const ticket_1 = __importDefault(require("../models/ticket"));
 const project_1 = __importDefault(require("../models/project"));
+const getTickets = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const tickets = yield ticket_1.default.findAll({
+        where: {
+            project: req.params.id,
+        },
+    });
+    res.json(tickets);
+});
+exports.getTickets = getTickets;
+const getTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const ticket = yield ticket_1.default.findByPk(req.params.id);
+    if (!ticket) {
+        return res.status(404).json({
+            message: "Ticket not found",
+        });
+    }
+    res.json(ticket);
+});
+exports.getTicket = getTicket;
 const createTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description, status, priority, assignee } = req.body;
     const project = req.params.id;
@@ -47,7 +66,7 @@ const createTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.createTicket = createTicket;
 // update ticket by optional query params, title, description, status, priority
 const updateTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, description, status, priority } = req.body;
+    const { title, description, status, priority, assignee } = req.body;
     const { id } = req.params;
     // Check if ticket exists
     const ticketExists = yield ticket_1.default.findByPk(id);
@@ -56,12 +75,12 @@ const updateTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             message: "Ticket not found",
         });
     }
-    // Update ticket
     yield ticket_1.default.update({
         title: title || ticketExists.title,
         description: description || ticketExists.description,
         status: status || ticketExists.status,
         priority: priority || ticketExists.priority,
+        assignee: assignee || ticketExists.assignee,
     }, {
         where: {
             id,
@@ -69,7 +88,6 @@ const updateTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     });
     return res.status(200).json({
         message: "Ticket updated successfully",
-        ticket: ticketExists,
     });
 });
 exports.updateTicket = updateTicket;

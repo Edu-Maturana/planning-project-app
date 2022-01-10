@@ -11,6 +11,8 @@ const isMember_1 = require("../helpers/isMember");
 const validateFields_1 = __importDefault(require("../middlewares/validateFields"));
 const validateJWT_1 = __importDefault(require("../middlewares/validateJWT"));
 const router = (0, express_1.Router)();
+router.get("/:id", validateJWT_1.default, isMember_1.isMemberProject, ticket_1.getTickets);
+router.get("/ticket/:id", validateJWT_1.default, isMember_1.isMemberTicket, ticket_1.getTicket);
 router.post("/:id", [
     validateJWT_1.default,
     isMember_1.isMemberProject,
@@ -21,8 +23,6 @@ router.post("/:id", [
 router.put("/:id", [
     validateJWT_1.default,
     isMember_1.isMemberTicket,
-    (0, express_validator_1.check)("title", "Title is required").not().isEmpty(),
-    (0, express_validator_1.check)("description", "Description is required").not().isEmpty(),
     validateFields_1.default,
 ], ticket_1.updateTicket);
 router.put("/files/:id", [validateJWT_1.default, isMember_1.isMemberTicket, validateFields_1.default], upload_1.uploadFileToTicket);

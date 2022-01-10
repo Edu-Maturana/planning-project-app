@@ -1,10 +1,50 @@
 import { Response, Request } from "express";
+import { v4 as uuidv4 } from "uuid";
 const bcrypt = require("bcrypt");
 
 import User from "../models/user";
 import generateJWT from "../helpers/generateJWT";
 
-const login = async (req: Request, res: Response) => {
+export const signUp = async (req: Request, res: Response) => {
+  const { name, email, password } = req.body;
+
+  // Check if user exists
+  const userExists = await User.findOne({
+    where: {
+      email,
+    },
+  });
+
+  if (userExists) {
+    return res.status(409).json({
+      msg: "User already exists",
+    });
+  }
+
+  // Encrypt password
+  const encrypted = await bcrypt.hash(password, 10);
+
+  let user = await User.create({
+    id: uuidv4(),
+    name,
+    email,
+    password: encrypted,
+  });
+
+  const { id, name: userName, email: userEmail } = user;
+
+  res.json({
+    msg: "User signed up successfully!",
+    user: {
+      id,
+      name: userName,
+      email: userEmail,
+    },
+  });
+};
+
+
+export const logIn = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -37,5 +77,3 @@ const login = async (req: Request, res: Response) => {
     data
   });
 };
-
-export default login;

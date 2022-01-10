@@ -1,6 +1,4 @@
 import { Request, Response } from "express";
-import { v4 as uuidv4 } from "uuid";
-const bcrypt = require("bcrypt");
 
 import User from "../models/user";
 import Workspace from "../models/workspace";
@@ -61,43 +59,5 @@ export const getTeammate = async (req: any, res: Response) => {
 
   return res.status(401).json({
     msg: "You are not a teammate of this user",
-  });
-};
-
-export const createUser = async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
-
-  // Check if user exists
-  const userExists = await User.findOne({
-    where: {
-      email,
-    },
-  });
-
-  if (userExists) {
-    return res.status(409).json({
-      msg: "User already exists",
-    });
-  }
-
-  // Encrypt password
-  const encrypted = await bcrypt.hash(password, 10);
-
-  let user = await User.create({
-    id: uuidv4(),
-    name,
-    email,
-    password: encrypted,
-  });
-
-  const { id, name: userName, email: userEmail } = user;
-
-  res.json({
-    msg: "User signed up successfully!",
-    user: {
-      id,
-      name: userName,
-      email: userEmail,
-    },
   });
 };

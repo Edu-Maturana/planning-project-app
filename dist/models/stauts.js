@@ -10,7 +10,7 @@ class Status extends sequelize_1.Model {
 }
 Status.init({
     id: {
-        type: sequelize_1.DataTypes.INTEGER,
+        type: sequelize_1.DataTypes.STRING,
         primaryKey: true,
         defaultValue: 1,
     },

@@ -2,6 +2,8 @@ import { Router } from "express";
 import { check } from "express-validator";
 
 import {
+  getTickets,
+  getTicket,
   createTicket,
   updateTicket,
   deleteTicket,
@@ -15,6 +17,20 @@ import validateFields from "../middlewares/validateFields";
 import validateJWT from "../middlewares/validateJWT";
 
 const router = Router();
+
+router.get(
+  "/:id",
+  validateJWT,
+  isMemberProject,
+  getTickets
+);
+
+router.get(
+  "/ticket/:id",
+  validateJWT,
+  isMemberTicket,
+  getTicket
+);
 
 router.post(
   "/:id",
@@ -33,8 +49,6 @@ router.put(
   [
     validateJWT,
     isMemberTicket,
-    check("title", "Title is required").not().isEmpty(),
-    check("description", "Description is required").not().isEmpty(),
     validateFields,
   ],
   updateTicket

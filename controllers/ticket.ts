@@ -3,9 +3,32 @@ import { v4 as uuidv4 } from "uuid";
 
 import Ticket from "../models/ticket";
 import Project from "../models/project";
+import Status from "../models/stauts";
+
+export const getTickets = async (req: any, res: Response) => {
+  const tickets = await Ticket.findAll({
+    where: {
+      project: req.params.id,
+    },
+  });
+
+  res.json(tickets);
+};
+
+export const getTicket = async (req: any, res: Response) => {
+  const ticket = await Ticket.findByPk(req.params.id);
+
+  if (!ticket) {
+    return res.status(404).json({
+      message: "Ticket not found",
+    });
+  }
+
+  res.json(ticket);
+};
 
 export const createTicket = async (req: any, res: Response) => {
-  const { title, description, status, priority, assignee  } = req.body;
+  const { title, description, status, priority, assignee } = req.body;
   const project = req.params.id;
 
   // Check if project exists
@@ -38,7 +61,7 @@ export const createTicket = async (req: any, res: Response) => {
 
 // update ticket by optional query params, title, description, status, priority
 export const updateTicket = async (req: any, res: Response) => {
-  const { title, description, status, priority } = req.body;
+  const { title, description, status, priority, assignee } = req.body;
   const { id } = req.params;
 
   // Check if ticket exists
@@ -49,13 +72,13 @@ export const updateTicket = async (req: any, res: Response) => {
     });
   }
 
-  // Update ticket
   await Ticket.update(
     {
       title: title || ticketExists.title,
       description: description || ticketExists.description,
       status: status || ticketExists.status,
       priority: priority || ticketExists.priority,
+      assignee: assignee || ticketExists.assignee,
     },
     {
       where: {
@@ -66,7 +89,6 @@ export const updateTicket = async (req: any, res: Response) => {
 
   return res.status(200).json({
     message: "Ticket updated successfully",
-    ticket: ticketExists,
   });
 };
 
