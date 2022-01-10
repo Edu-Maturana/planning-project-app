@@ -54,13 +54,11 @@ export const isMemberProject = async (req: any, res: Response, next: any) => {
     });
   }
 
-  const members = workspaceExists.members;
-
-  const isMember = members.includes(user);
+  const isMember = workspaceExists.members.includes(user);
 
   if (!isMember) {
     return res.status(401).json({
-      message: "Permission denied",
+      message: "You are not member of this workspace",
     });
   }
 

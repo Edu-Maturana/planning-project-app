@@ -65,7 +65,7 @@ Ticket.init({
     },
     assignee: {
         type: sequelize_1.DataTypes.JSON,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: "user",
             key: "id",

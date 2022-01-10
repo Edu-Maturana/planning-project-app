@@ -17,7 +17,7 @@ const uuid_1 = require("uuid");
 const ticket_1 = __importDefault(require("../models/ticket"));
 const project_1 = __importDefault(require("../models/project"));
 const createTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, description } = req.body;
+    const { title, description, status, priority, assignee } = req.body;
     const project = req.params.id;
     // Check if project exists
     const projectExists = yield project_1.default.findByPk(project);
@@ -32,6 +32,9 @@ const createTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         id: (0, uuid_1.v4)(),
         title,
         description,
+        status: status || "1",
+        priority: priority || "1",
+        assignee: assignee || null,
         project,
         workspace: projectExists.workspace,
         creator: user,
@@ -42,7 +45,7 @@ const createTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     });
 });
 exports.createTicket = createTicket;
-// update tickey by optional query params, title, description, status, priority
+// update ticket by optional query params, title, description, status, priority
 const updateTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description, status, priority } = req.body;
     const { id } = req.params;

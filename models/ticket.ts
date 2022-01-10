@@ -74,7 +74,7 @@ Ticket.init({
     },
     assignee: {
         type: DataTypes.JSON,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: "user",
             key: "id",

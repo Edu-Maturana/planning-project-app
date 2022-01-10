@@ -5,7 +5,7 @@ import Ticket from "../models/ticket";
 import Project from "../models/project";
 
 export const createTicket = async (req: any, res: Response) => {
-  const { title, description } = req.body;
+  const { title, description, status, priority, assignee  } = req.body;
   const project = req.params.id;
 
   // Check if project exists
@@ -22,6 +22,9 @@ export const createTicket = async (req: any, res: Response) => {
     id: uuidv4(),
     title,
     description,
+    status: status || "1",
+    priority: priority || "1",
+    assignee: assignee || null,
     project,
     workspace: projectExists.workspace,
     creator: user,
@@ -33,7 +36,7 @@ export const createTicket = async (req: any, res: Response) => {
   });
 };
 
-// update tickey by optional query params, title, description, status, priority
+// update ticket by optional query params, title, description, status, priority
 export const updateTicket = async (req: any, res: Response) => {
   const { title, description, status, priority } = req.body;
   const { id } = req.params;
