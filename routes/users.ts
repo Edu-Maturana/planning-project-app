@@ -2,17 +2,25 @@ import { Router } from "express";
 import { check } from "express-validator";
 
 import {
-  getUsers,
-  getUser,
+  getTeammates,
+  getTeammate,
   createUser,
   deleteUser,
 } from "../controllers/users";
 import validateFields from "../middlewares/validateFields";
+import validateJWT from "../middlewares/validateJWT";
 
 const router = Router();
 
-router.get("/", getUsers);
-router.get("/:id", getUser);
+router.get("/", [
+  validateJWT,
+  validateFields,
+],getTeammates);
+
+router.get("/:id", [
+  validateJWT,
+  validateFields,
+], getTeammate);
 
 router.post(
   "/",

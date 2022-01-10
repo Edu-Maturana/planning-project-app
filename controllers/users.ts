@@ -3,31 +3,65 @@ import { v4 as uuidv4 } from "uuid";
 const bcrypt = require("bcrypt");
 
 import User from "../models/user";
+import Workspace from "../models/workspace";
 
-export const getUsers = async (req: Request, res: Response) => {
-  const users = await User.findAll({
-    attributes: {
-      exclude: ["password", "createdAt", "updatedAt"],
-    },
-  });
+export const getTeammates = async (req: any, res: Response) => {
+  const { id } = req.user;
 
-  res.json(users);
-};
-
-export const getUser = async (req: Request, res: Response) => {
-  const id = req.params.id;
-
-  const user = await User.findByPk(id, {
-    attributes: {
-      exclude: ["password", "createdAt", "updatedAt"],
-    },
-  });
+  const user = await User.findByPk(id);
 
   if (!user) {
-    res.status(404).json({ msg: "User not found" });
+    return res.status(404).json({
+      msg: "User not found",
+    });
   }
 
-  res.json(user);
+  const membership = user.isMember[0];
+
+  const workspace = await Workspace.findByPk(membership);
+
+  if (!workspace) {
+    return res.status(404).json({
+      msg: "Workspace not found",
+    });
+  }
+
+  const teammates = workspace.members;
+
+  // filter out the current user
+  const filteredTeammates = teammates.filter((teammate: any) => {
+    return teammate !== id;
+  });
+ 
+  res.json({
+    teammates: filteredTeammates,
+  });
+};
+
+export const getTeammate = async (req: any, res: Response) => {
+  const { id } = req.params;
+  const user = req.user.id;
+
+  // verify that the user exists and is a teammate of the current user
+  const teammate = await User.findByPk(id);
+
+  if (!teammate) {
+    return res.status(404).json({
+      msg: "User not found",
+    });
+  }
+ 
+  const currentUser = await User.findByPk(user);
+
+  if (currentUser.isMember[0] == teammate.isMember[0]) {
+    return res.status(200).json({
+      teammate,
+    });
+  }
+
+  return res.status(401).json({
+    msg: "You are not a teammate of this user",
+  });
 };
 
 export const createUser = async (req: Request, res: Response) => {

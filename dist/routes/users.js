@@ -7,9 +7,16 @@ const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const users_1 = require("../controllers/users");
 const validateFields_1 = __importDefault(require("../middlewares/validateFields"));
+const validateJWT_1 = __importDefault(require("../middlewares/validateJWT"));
 const router = (0, express_1.Router)();
-router.get("/", users_1.getUsers);
-router.get("/:id", users_1.getUser);
+router.get("/", [
+    validateJWT_1.default,
+    validateFields_1.default,
+], users_1.getTeammates);
+router.get("/:id", [
+    validateJWT_1.default,
+    validateFields_1.default,
+], users_1.getTeammate);
 router.post("/", [
     (0, express_validator_1.check)("name", "Name is required").not().isEmpty(),
     (0, express_validator_1.check)("email", "Email is not valid").isEmail(),
