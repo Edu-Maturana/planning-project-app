@@ -2,7 +2,52 @@ import { Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
 import Project from "../models/project";
+import User from "../models/user";
 import Workspace from "../models/workspace";
+
+export const getProjects = async (req: any, res: Response) => {
+  const { id } = req.user;
+
+  const user = await User.findByPk(id);
+
+  if (!user) {
+    return res.status(404).json({
+      msg: "User not found",
+    });
+  }
+
+  const projects = await Project.findAll({
+    where: {
+      workspace: user.isMember[0],
+    },
+  });
+
+  if (!projects) {
+    return res.status(404).json({
+      msg: "You are not a member of any project",
+    });
+  }
+
+  res.json({
+    projects,
+  });
+};
+
+export const getProject = async (req: any, res: Response) => {
+  const { id } = req.params;
+
+  const project = await Project.findByPk(id);
+
+  if (!project) {
+    return res.status(404).json({
+      msg: "Project not found",
+    });
+  }
+
+  res.json({
+    project,
+  });
+};
 
 export const createProject = async (req: any, res: Response) => {
   const { name, description } = req.body;

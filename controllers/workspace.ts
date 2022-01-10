@@ -4,10 +4,47 @@ import { v4 as uuidv4 } from "uuid";
 import Workspace from "../models/workspace";
 import User from "../models/user";
 
+export const getWorkspaces = async (req: any, res: Response) => {
+  const { id } = req.user;
+
+  const user = await User.findByPk(id);
+
+  if (!user) {
+    return res.status(404).json({
+      msg: "User not found",
+    });
+  }
+
+  const workspaces = await Workspace.findAll({
+    where: {
+      id: user.isMember[0],
+    },
+  });
+
+  if (!workspaces) {
+    return res.status(404).json({
+      msg: "You are not a member of any workspace",
+    });
+  }
+
+  res.json({
+    workspaces,
+  });
+};
+
 export const createWorkspace = async (req: any, res: Response) => {
   const { name, description } = req.body;
 
   const owner = req.user.id;
+
+  // verify if user already has a workspace
+  const user = await User.findByPk(owner);
+
+  if (user.isMember.length > 0) {
+    return res.status(400).json({
+      msg: "User already has a workspace",
+    });
+  }
 
   if (!owner) {
     return res.status(401).json({

@@ -1,11 +1,13 @@
 import { Router } from "express";
 import { check } from "express-validator";
 
-import { createWorkspace, addMember } from "../controllers/workspace";
+import { getWorkspaces, createWorkspace, addMember } from "../controllers/workspace";
 import validateFields from "../middlewares/validateFields";
 import validateJWT from "../middlewares/validateJWT";
 
 const router = Router();
+
+router.get("/", validateJWT, getWorkspaces);
 
 router.post(
   "/",

@@ -1,12 +1,15 @@
 import { Router } from "express";
 import { check } from "express-validator";
 
-import { createProject, deleteProject } from "../controllers/project";
+import { getProjects, getProject,createProject, deleteProject } from "../controllers/project";
 import { isMemberProject, isMemberWorkspace } from "../helpers/isMember";
 import validateFields from "../middlewares/validateFields";
 import validateJWT from "../middlewares/validateJWT";
 
 const router = Router();
+
+router.get("/", validateJWT, getProjects);
+router.get("/:id", validateJWT, isMemberProject, getProject);
 
 router.post(
   "/:id",
