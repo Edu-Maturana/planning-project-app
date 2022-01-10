@@ -25,21 +25,8 @@ router.put("/:id", [
     (0, express_validator_1.check)("description", "Description is required").not().isEmpty(),
     validateFields_1.default,
 ], ticket_1.updateTicket);
-router.put("/status/:id", [
-    validateJWT_1.default,
-    isMember_1.isMemberTicket,
-    (0, express_validator_1.check)("status", "Status is required").not().isEmpty(),
-    (0, express_validator_1.check)("status", "Status is invalid").isIn([1, 2, 3, 4]),
-    validateFields_1.default,
-], ticket_1.changeStatus);
-router.put("/priority/:id", [
-    validateJWT_1.default,
-    isMember_1.isMemberTicket,
-    (0, express_validator_1.check)("priority", "Priority is required").not().isEmpty(),
-    (0, express_validator_1.check)("priority", "Priority is invalid").isIn([1, 2, 3]),
-    validateFields_1.default,
-], ticket_1.changePriority);
 router.put("/files/:id", [validateJWT_1.default, isMember_1.isMemberTicket, validateFields_1.default], upload_1.uploadFileToTicket);
 router.delete("/files/:id", [validateJWT_1.default, isMember_1.isMemberTicket], upload_1.deleteFileFromTicket);
+router.delete("/:id", [validateJWT_1.default, isMember_1.isMemberTicket], ticket_1.deleteTicket);
 exports.default = router;
 //# sourceMappingURL=tickets.js.map

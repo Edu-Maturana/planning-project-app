@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.changePriority = exports.changeStatus = exports.updateTicket = exports.createTicket = void 0;
+exports.deleteTicket = exports.updateTicket = exports.createTicket = void 0;
 const uuid_1 = require("uuid");
 const ticket_1 = __importDefault(require("../models/ticket"));
 const project_1 = __importDefault(require("../models/project"));
@@ -42,11 +42,12 @@ const createTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     });
 });
 exports.createTicket = createTicket;
+// update tickey by optional query params, title, description, status, priority
 const updateTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, description } = req.body;
-    const ticket = req.params.id;
+    const { title, description, status, priority } = req.body;
+    const { id } = req.params;
     // Check if ticket exists
-    const ticketExists = yield ticket_1.default.findByPk(ticket);
+    const ticketExists = yield ticket_1.default.findByPk(id);
     if (!ticketExists) {
         return res.status(404).json({
             message: "Ticket not found",
@@ -54,56 +55,39 @@ const updateTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
     // Update ticket
     yield ticket_1.default.update({
-        title,
-        description,
+        title: title || ticketExists.title,
+        description: description || ticketExists.description,
+        status: status || ticketExists.status,
+        priority: priority || ticketExists.priority,
     }, {
         where: {
-            id: ticket,
+            id,
         },
     });
     return res.status(200).json({
         message: "Ticket updated successfully",
+        ticket: ticketExists,
     });
 });
 exports.updateTicket = updateTicket;
-const changeStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const ticket = req.params.id;
-    const { status } = req.body;
+const deleteTicket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
     // Check if ticket exists
-    const ticketExists = yield ticket_1.default.findByPk(ticket);
+    const ticketExists = yield ticket_1.default.findByPk(id);
     if (!ticketExists) {
         return res.status(404).json({
             message: "Ticket not found",
         });
     }
-    // Update ticket
-    yield ticket_1.default.update({
-        status,
-    }, {
+    // Delete ticket
+    yield ticket_1.default.destroy({
         where: {
-            id: ticket,
+            id,
         },
     });
-});
-exports.changeStatus = changeStatus;
-const changePriority = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const ticket = req.params.id;
-    const { priority } = req.body;
-    // Check if ticket exists
-    const ticketExists = yield ticket_1.default.findByPk(ticket);
-    if (!ticketExists) {
-        return res.status(404).json({
-            message: "Ticket not found",
-        });
-    }
-    // Update ticket
-    yield ticket_1.default.update({
-        priority,
-    }, {
-        where: {
-            id: ticket,
-        },
+    return res.status(200).json({
+        message: "Ticket deleted successfully",
     });
 });
-exports.changePriority = changePriority;
+exports.deleteTicket = deleteTicket;
 //# sourceMappingURL=ticket.js.map

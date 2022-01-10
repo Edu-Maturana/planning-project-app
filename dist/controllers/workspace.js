@@ -31,6 +31,9 @@ const createWorkspace = (req, res) => __awaiter(void 0, void 0, void 0, function
         owner,
         members: [owner],
     });
+    yield owner.update({
+        isMember: [...owner.isMember, workspace.id]
+    });
     const data = {
         id: workspace.id,
         name: workspace.name,
@@ -72,9 +75,13 @@ const addMember = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const updatedWorkspace = yield workspace.update({
         members: [...workspace.members, userId],
     });
+    const memberAdded = yield user.update({
+        isMember: [...user.isMember, workspaceId],
+    });
     res.json({
         msg: "User added successfully",
         workspace: updatedWorkspace,
+        memberAdded,
     });
 });
 exports.addMember = addMember;

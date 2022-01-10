@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
+const bcrypt = require("bcrypt");
 
 import User from "../models/user";
-const bcrypt = require("bcrypt");
 
 export const getUsers = async (req: Request, res: Response) => {
   const users = await User.findAll({
@@ -24,7 +24,7 @@ export const getUser = async (req: Request, res: Response) => {
   });
 
   if (!user) {
-    res.status(404).json({ message: "User not found" });
+    res.status(404).json({ msg: "User not found" });
   }
 
   res.json(user);
@@ -32,6 +32,19 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
+
+  // Check if user exists
+  const userExists = await User.findOne({
+    where: {
+      email,
+    },
+  });
+
+  if (userExists) {
+    return res.status(409).json({
+      msg: "User already exists",
+    });
+  }
 
   // Encrypt password
   const encrypted = await bcrypt.hash(password, 10);

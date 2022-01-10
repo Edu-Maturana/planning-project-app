@@ -2,10 +2,9 @@ import { Router } from "express";
 import { check } from "express-validator";
 
 import {
-  changeStatus,
-  changePriority,
   createTicket,
   updateTicket,
+  deleteTicket,
 } from "../controllers/ticket";
 import {
   deleteFileFromTicket,
@@ -42,30 +41,6 @@ router.put(
 );
 
 router.put(
-  "/status/:id",
-  [
-    validateJWT,
-    isMemberTicket,
-    check("status", "Status is required").not().isEmpty(),
-    check("status", "Status is invalid").isIn([1, 2, 3, 4]),
-    validateFields,
-  ],
-  changeStatus
-);
-
-router.put(
-  "/priority/:id",
-  [
-    validateJWT,
-    isMemberTicket,
-    check("priority", "Priority is required").not().isEmpty(),
-    check("priority", "Priority is invalid").isIn([1, 2, 3]),
-    validateFields,
-  ],
-  changePriority
-);
-
-router.put(
   "/files/:id",
   [validateJWT, isMemberTicket, validateFields],
   uploadFileToTicket
@@ -75,5 +50,11 @@ router.delete(
   [validateJWT, isMemberTicket],
   deleteFileFromTicket
 );
+
+router.delete(
+  "/:id",
+  [validateJWT, isMemberTicket],
+  deleteTicket
+)
 
 export default router;

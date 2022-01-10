@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
 const uuid_1 = require("uuid");
-const user_1 = __importDefault(require("../models/user"));
 const bcrypt = require("bcrypt");
+const user_1 = __importDefault(require("../models/user"));
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield user_1.default.findAll({
         attributes: {
@@ -33,13 +33,24 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         },
     });
     if (!user) {
-        res.status(404).json({ message: "User not found" });
+        res.status(404).json({ msg: "User not found" });
     }
     res.json(user);
 });
 exports.getUser = getUser;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
+    // Check if user exists
+    const userExists = yield user_1.default.findOne({
+        where: {
+            email,
+        },
+    });
+    if (userExists) {
+        return res.status(409).json({
+            msg: "User already exists",
+        });
+    }
     // Encrypt password
     const encrypted = yield bcrypt.hash(password, 10);
     let user = yield user_1.default.create({

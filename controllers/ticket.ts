@@ -33,12 +33,13 @@ export const createTicket = async (req: any, res: Response) => {
   });
 };
 
+// update tickey by optional query params, title, description, status, priority
 export const updateTicket = async (req: any, res: Response) => {
-  const { title, description } = req.body;
-  const ticket = req.params.id;
+  const { title, description, status, priority } = req.body;
+  const { id } = req.params;
 
   // Check if ticket exists
-  const ticketExists = await Ticket.findByPk(ticket);
+  const ticketExists = await Ticket.findByPk(id);
   if (!ticketExists) {
     return res.status(404).json({
       message: "Ticket not found",
@@ -48,67 +49,43 @@ export const updateTicket = async (req: any, res: Response) => {
   // Update ticket
   await Ticket.update(
     {
-      title,
-      description,
+      title: title || ticketExists.title,
+      description: description || ticketExists.description,
+      status: status || ticketExists.status,
+      priority: priority || ticketExists.priority,
     },
     {
       where: {
-        id: ticket,
+        id,
       },
     }
   );
 
   return res.status(200).json({
     message: "Ticket updated successfully",
+    ticket: ticketExists,
   });
 };
 
-export const changeStatus = async (req: any, res: Response) => {
-  const ticket = req.params.id;
-  const { status } = req.body;
+export const deleteTicket = async (req: any, res: Response) => {
+  const { id } = req.params;
 
   // Check if ticket exists
-  const ticketExists = await Ticket.findByPk(ticket);
+  const ticketExists = await Ticket.findByPk(id);
   if (!ticketExists) {
     return res.status(404).json({
       message: "Ticket not found",
     });
   }
 
-  // Update ticket
-  await Ticket.update(
-    {
-      status,
+  // Delete ticket
+  await Ticket.destroy({
+    where: {
+      id,
     },
-    {
-      where: {
-        id: ticket,
-      },
-    }
-  );
-};
+  });
 
-export const changePriority = async (req: any, res: Response) => {
-  const ticket = req.params.id;
-  const { priority } = req.body;
-
-  // Check if ticket exists
-  const ticketExists = await Ticket.findByPk(ticket);
-  if (!ticketExists) {
-    return res.status(404).json({
-      message: "Ticket not found",
-    });
-  }
-
-  // Update ticket
-  await Ticket.update(
-    {
-      priority,
-    },
-    {
-      where: {
-        id: ticket,
-      },
-    }
-  );
+  return res.status(200).json({
+    message: "Ticket deleted successfully",
+  });
 };

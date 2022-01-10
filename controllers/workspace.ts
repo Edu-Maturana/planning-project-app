@@ -23,6 +23,10 @@ export const createWorkspace = async (req: any, res: Response) => {
     members: [owner],
   });
 
+  await owner.update ({
+    isMember: [...owner.isMember, workspace.id]
+  });
+
   const data = {
     id: workspace.id,
     name: workspace.name,
@@ -73,8 +77,13 @@ export const addMember = async (req: any, res: Response) => {
     members: [...workspace.members, userId],
   });
 
+  const memberAdded = await user.update({
+    isMember: [...user.isMember, workspaceId],
+  });
+
   res.json({
     msg: "User added successfully",
     workspace: updatedWorkspace,
+    memberAdded,
   });
 };
